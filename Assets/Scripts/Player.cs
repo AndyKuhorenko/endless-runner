@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    private const float gravity = 9.8f;
+    private const float maxRotation = 30f;
+    private const float offsetPosX = 1f;
 
     private CharacterController controller;
     private GameObject body;
@@ -15,27 +18,24 @@ public class Player : MonoBehaviour
         Right,
     };
 
-    [SerializeField] private float runningSpeed = 1f;
-    private Track currentTrack = Track.Middle;
-    private float offsetPosX = 1f;
-    private float changeTrackSpeed = 3f;
+    [SerializeField] private float runningSpeed = 2f;
 
-    private float maxRotation = 30f;
+    private float changeTrackSpeed = 2f;
+    private float verticalVelocity = 0f;
+    private Vector3 moveVector; 
+
     private float rotation = 0f;
-    private bool isRotationRising = false;
 
     private bool isMovingLeft = false;
     private bool isMovingRight = false;
     
 
-    // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
         body = GameObject.FindGameObjectWithTag("PlayerBody");
     }
 
-    // Update is called once per frame
     void Update()
     {
         ProcessMoving();
@@ -43,191 +43,122 @@ public class Player : MonoBehaviour
 
     private void ProcessMoving()
     {
+        moveVector = Vector3.zero;
+
+        SetVerticalVelocity();
+
         HandleInputs();
 
+        ProcessRotating();
+
+        moveVector.z = runningSpeed;
+
+        moveVector.y = verticalVelocity;
+
+        controller.Move(moveVector * Time.deltaTime);
+    }
+
+    private void ProcessRotating()
+    {
         if (isMovingLeft)
         {
-            MoveLeft();
+            RotateToLeft();
         }
         else if (isMovingRight)
         {
-            MoveRight();
+            RotateToRight();
         }
+        else
+        {
+            RotateToCenter();
+        }
+    }
 
-        MoveForward();
+
+    private void SetVerticalVelocity()
+    {
+        if (controller.isGrounded)
+        {
+            verticalVelocity = -0.5f;
+        }
+        else
+        {
+            verticalVelocity -= gravity * Time.deltaTime;
+        }
     }
 
     private void HandleInputs()
     {
-        print(isMovingLeft);
-        if ((Input.GetKeyDown("a") || Input.GetKeyDown("left")) && !isMovingLeft)
+        float vectorX = Input.GetAxisRaw("Horizontal");
+
+        isMovingLeft = vectorX < 0;
+        isMovingRight = vectorX > 0;
+
+        if (transform.position.x >= offsetPosX && isMovingRight)
         {
-            isMovingLeft = true;
-
-            if (isMovingRight && currentTrack == Track.Middle)
-            {
-                currentTrack = Track.Right;
-            }
-
             isMovingRight = false;
-            isRotationRising = true;
+
+            moveVector.x = 0;
         }
-        
-        if ((Input.GetKeyDown("d") || Input.GetKeyDown("right")) && !isMovingRight)
+        else if (transform.position.x <= -offsetPosX && isMovingLeft)
         {
-            isMovingRight = true;
-
-            if (isMovingLeft && currentTrack == Track.Middle)
-            {
-                currentTrack = Track.Left;
-            }
-
             isMovingLeft = false;
-            isRotationRising = true;
-        }
-    }
 
-    private void MoveForward()
-    {
-        controller.Move(Vector3.forward * runningSpeed * Time.deltaTime);
-
-        if (!isMovingLeft && !isMovingRight)
-        {
-            body.transform.rotation = Quaternion.identity;
-
-            rotation = 0f;
-        }
-    }
-
-    private void MoveLeft()
-    {
-        float movingSpeed = changeTrackSpeed * Time.deltaTime;
-
-        switch (currentTrack)
-        {
-            case Track.Left:
-                MoveLeftFromMiddleTrack(movingSpeed);
-                break;
-            case Track.Middle:
-                MoveLeftFromMiddleTrack(movingSpeed);
-                break;
-            case Track.Right:
-                MoveLeftFromRightTrack(movingSpeed);
-                break;
-
-        }
-    }
-    
-    private void MoveRight()
-    {
-        float movingSpeed = changeTrackSpeed * Time.deltaTime;
-
-        switch (currentTrack)
-        {
-            case Track.Left:
-                MoveRightFromLeftTrack(movingSpeed);
-                break;
-            case Track.Middle:
-                MoveRightFromMiddleTrack(movingSpeed);
-                break;
-            case Track.Right:
-                MoveRightFromMiddleTrack(movingSpeed);
-                break;
-
-        }
-    }
-
-    private void MoveLeftFromMiddleTrack(float movingSpeed)
-    {
-        controller.Move(Vector3.right * -movingSpeed);
-
-        RotateLeft(movingSpeed);
-
-        if (transform.position.x <= (float)Track.Left)
-        {
-            transform.position = new Vector3((float)Track.Left, transform.position.y, transform.position.z);
-
-            currentTrack = Track.Left;
-
-            isMovingLeft = false;
-        }
-    }
-
-    private void MoveLeftFromRightTrack(float movingSpeed)
-    {
-        controller.Move(Vector3.right * -movingSpeed);
-
-        RotateLeft(movingSpeed);
-
-        if (transform.position.x <= (float)Track.Middle)
-        {
-            transform.position = new Vector3((float)Track.Middle, transform.position.y, transform.position.z);
-
-            currentTrack = Track.Middle;
-
-            isMovingLeft = false;
-        }
-    }
-
-    private void MoveRightFromLeftTrack(float movingSpeed)
-    {
-        controller.Move(Vector3.right * movingSpeed);
-
-        RotateRight(movingSpeed);
-
-        if (transform.position.x >= (float)Track.Middle)
-        {
-            transform.position = new Vector3((float)Track.Middle, transform.position.y, transform.position.z);
-
-            currentTrack = Track.Middle;
-
-            isMovingRight = false;
-        }
-    }
-
-    private void MoveRightFromMiddleTrack(float movingSpeed)
-    {
-        controller.Move(Vector3.right * movingSpeed);
-
-        RotateRight(movingSpeed);
-
-        if (transform.position.x >= (float)Track.Right)
-        {
-            transform.position = new Vector3((float)Track.Right, transform.position.y, transform.position.z);
-
-            currentTrack = Track.Right;
-
-            isMovingRight = false;
-        }
-    }
-
-    private void RotateLeft(float movingSpeed)
-    {
-        if (isRotationRising)
-        {
-            rotation -= movingSpeed * 50;
-
-            if (rotation <= -maxRotation) isRotationRising = false;
+            moveVector.x = 0;
         }
         else
         {
-            rotation += movingSpeed * 50;
+            moveVector.x = vectorX * changeTrackSpeed;
+        }
+    }
+
+    private void RotateToLeft()
+    {
+        float movingSpeed = runningSpeed * Time.deltaTime;
+
+        rotation -= movingSpeed * 40;
+
+        if (rotation <= -maxRotation)
+        {
+            rotation = -maxRotation;
         }
 
         body.transform.rotation = Quaternion.Euler(0, rotation, 0);
     }
-    
-    private void RotateRight(float movingSpeed)
-    {
-        if (isRotationRising)
-        {
-            rotation += movingSpeed * 50;
 
-            if (rotation >= maxRotation) isRotationRising = false;
+    private void RotateToRight()
+    {
+        float movingSpeed = runningSpeed * Time.deltaTime;
+
+        rotation += movingSpeed * 40;
+
+        if (rotation >= maxRotation)
+        {
+            rotation = maxRotation;
+        }
+
+        body.transform.rotation = Quaternion.Euler(0, rotation, 0);
+    }
+
+    private void RotateToCenter()
+    {
+        float movingSpeed = runningSpeed * Time.deltaTime;
+
+        if (rotation < 0f)
+        {
+            rotation += movingSpeed * 100;
+
+            if (rotation >= 0f) rotation = 0f;
+        }
+        else if (rotation > 0f)
+        {
+            rotation -= movingSpeed * 100;
+
+            if (rotation <= 0f) rotation = 0f;
         }
         else
         {
-            rotation -= movingSpeed * 50;
+            rotation = 0f;
         }
 
         body.transform.rotation = Quaternion.Euler(0, rotation, 0);

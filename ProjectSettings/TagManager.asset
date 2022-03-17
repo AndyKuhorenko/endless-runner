@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - PlayerBody
+  - EnvironmentPrefab
+  - Environment
+  - Corridor
   layers:
   - Default
   - TransparentFX

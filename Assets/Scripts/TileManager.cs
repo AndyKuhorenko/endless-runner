@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class TileManager : MonoBehaviour
 {
-    [SerializeField] private int tilesInScene = 4;
+    [SerializeField] private int tilesInScene = 3;
+    [SerializeField] private Tile tile;
+
     private readonly int tileLength = 10;
     private float tileSpawnPosZ = 0;
 
-    private Tile tile;
     private List<Tile> activeTiles = new List<Tile>();
 
 
@@ -19,7 +20,7 @@ public class TileManager : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
-        tile = FindObjectOfType<Tile>();
+        // tile = FindObjectOfType<Tile>();
         
         for (int i = 0; i < tilesInScene; i++)
         {
@@ -62,9 +63,7 @@ public class TileManager : MonoBehaviour
 
     private void AddTile()
     {
-        Tile newTile = Instantiate(tile);
-
-        newTile.transform.SetParent(transform);
+        Tile newTile = Instantiate(tile, transform);
 
         newTile.transform.position = Vector3.forward * tileSpawnPosZ;
 
