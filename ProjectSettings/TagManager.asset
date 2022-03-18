@@ -8,6 +8,7 @@ TagManager:
   - EnvironmentPrefab
   - Environment
   - Corridor
+  - ObstaclePrefab
   layers:
   - Default
   - TransparentFX

@@ -7,6 +7,8 @@ public class TileManager : MonoBehaviour
 {
     [SerializeField] private int tilesInScene = 3;
     [SerializeField] private Tile tile;
+    [SerializeField] GameObject slowZombie;
+    [SerializeField] GameObject fastZombie;
 
     private readonly int tileLength = 10;
     private float tileSpawnPosZ = 0;
@@ -20,11 +22,17 @@ public class TileManager : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
-        // tile = FindObjectOfType<Tile>();
         
         for (int i = 0; i < tilesInScene; i++)
         {
-            AddTile();
+            if (i == 0 || i == 1)
+            {
+                AddTile(false);
+            }
+            else
+            {
+                AddTile(true);
+            }
         }
 
     }
@@ -44,7 +52,7 @@ public class TileManager : MonoBehaviour
         if (playerPosZ > (tileSpawnPosZ - (tilesInScene - passedTiles) * tileLength))
         {
             RemoveTile();
-            AddTile();
+            AddTile(true);
         }
     }
     private void SetNewPlayerPosZ()
@@ -61,11 +69,21 @@ public class TileManager : MonoBehaviour
         Destroy(firstTile.gameObject);
     }
 
-    private void AddTile()
+    private void AddTile(bool hasEnemies)
     {
         Tile newTile = Instantiate(tile, transform);
 
         newTile.transform.position = Vector3.forward * tileSpawnPosZ;
+
+        if (hasEnemies)
+        {
+            newTile.hasEnemies = hasEnemies;
+
+            newTile.hasObstacles = hasEnemies;
+
+            newTile.slowZombie = slowZombie;
+            newTile.fastZombie = fastZombie;
+        }
 
         activeTiles.Add(newTile);
 

@@ -5,27 +5,25 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private const float gravity = 9.8f;
+    private const float gravity = 14.8f;
     private const float maxRotation = 30f;
     private const float offsetPosX = 1f;
 
     private CharacterController controller;
     private GameObject body;
+    [SerializeField] private Animator animator;
 
-    private enum Track {
-        Left = -1,
-        Middle,
-        Right,
-    };
+    [SerializeField] private float runningSpeed = 4f;
 
-    [SerializeField] private float runningSpeed = 2f;
-
-    private float changeTrackSpeed = 2f;
+    private float changeTrackSpeed = 2.5f;
     private float verticalVelocity = 0f;
-    private Vector3 moveVector; 
+    private const float jumpVelocity = 4f;
+    private const float jumpHeight = 0.5f;
+    private Vector3 moveVector;
 
     private float rotation = 0f;
 
+    private bool isJumping = false;
     private bool isMovingLeft = false;
     private bool isMovingRight = false;
     
@@ -41,11 +39,31 @@ public class Player : MonoBehaviour
         ProcessMoving();
     }
 
+    private void ProcessJumping()
+    {
+        animator.SetBool("isJumping", isJumping);
+
+        verticalVelocity = jumpVelocity;
+
+        if (transform.position.y > jumpHeight)
+        {
+            isJumping = false;
+        }
+    }
+
     private void ProcessMoving()
     {
         moveVector = Vector3.zero;
 
-        SetVerticalVelocity();
+        if (isJumping)
+        {
+            ProcessJumping();
+        }
+        else
+        {
+            SetVerticalVelocity();
+        }
+
 
         HandleInputs();
 
@@ -80,6 +98,7 @@ public class Player : MonoBehaviour
         if (controller.isGrounded)
         {
             verticalVelocity = -0.5f;
+            animator.SetBool("isJumping", isJumping);
         }
         else
         {
@@ -110,13 +129,24 @@ public class Player : MonoBehaviour
         {
             moveVector.x = vectorX * changeTrackSpeed;
         }
+
+
+        if (controller.isGrounded && !isJumping)
+        {
+            if (Input.GetKeyDown("w") || Input.GetKeyDown("space") || Input.GetKeyDown("up"))
+            {
+                isJumping = true;
+            }
+        }
+        
+
     }
 
     private void RotateToLeft()
     {
-        float movingSpeed = runningSpeed * Time.deltaTime;
+        float movingSpeed = changeTrackSpeed * Time.deltaTime;
 
-        rotation -= movingSpeed * 40;
+        rotation -= movingSpeed * 80;
 
         if (rotation <= -maxRotation)
         {
@@ -128,9 +158,9 @@ public class Player : MonoBehaviour
 
     private void RotateToRight()
     {
-        float movingSpeed = runningSpeed * Time.deltaTime;
+        float movingSpeed = changeTrackSpeed * Time.deltaTime;
 
-        rotation += movingSpeed * 40;
+        rotation += movingSpeed * 80;
 
         if (rotation >= maxRotation)
         {
@@ -142,7 +172,7 @@ public class Player : MonoBehaviour
 
     private void RotateToCenter()
     {
-        float movingSpeed = runningSpeed * Time.deltaTime;
+        float movingSpeed = changeTrackSpeed * Time.deltaTime;
 
         if (rotation < 0f)
         {
@@ -167,6 +197,16 @@ public class Player : MonoBehaviour
     public void AddRunningSpeed(float addedSpeed)
     {
         runningSpeed += addedSpeed;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(other.name);
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        print("player collision!");
     }
 
     public float GetPosZ()
