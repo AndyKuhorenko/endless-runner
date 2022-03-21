@@ -14,6 +14,7 @@ public class TileManager : MonoBehaviour
     private float tileSpawnPosZ = 0;
 
     private List<Tile> activeTiles = new List<Tile>();
+    private int tileObstacleSpawnChance = 30;
 
 
     private Player player;
@@ -77,6 +78,7 @@ public class TileManager : MonoBehaviour
 
         if (hasEnemies)
         {
+            newTile.obstacleSpawnChance = tileObstacleSpawnChance;
             newTile.hasEnemies = hasEnemies;
 
             newTile.hasObstacles = hasEnemies;
@@ -88,5 +90,10 @@ public class TileManager : MonoBehaviour
         activeTiles.Add(newTile);
 
         this.tileSpawnPosZ += tileLength;
+    }
+
+    public void IncreaseObstacleSpawnChance()
+    {
+        tileObstacleSpawnChance += 10;
     }
 }

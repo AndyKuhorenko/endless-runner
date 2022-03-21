@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2111157904586563760}
   - component: {fileID: 3504077541475330548}
   - component: {fileID: 1912728598661670151}
-  - component: {fileID: 8448069002254997157}
   m_Layer: 0
   m_Name: Track
   m_TagString: Untagged
@@ -82,19 +81,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8448069002254997157
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2687039045796324907}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3218671715636298192
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +92,6 @@ GameObject:
   - component: {fileID: 6499417902438000440}
   - component: {fileID: 7879264355429518997}
   - component: {fileID: 3038552690660991368}
-  - component: {fileID: 1548458575290645570}
   m_Layer: 0
   m_Name: Track (1)
   m_TagString: Untagged
@@ -177,19 +162,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1548458575290645570
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3218671715636298192}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3683478749786194978
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,7 +173,6 @@ GameObject:
   - component: {fileID: 5648537991807958978}
   - component: {fileID: 1701850977585296247}
   - component: {fileID: 5815476186113487356}
-  - component: {fileID: 8643003684911767373}
   m_Layer: 0
   m_Name: Track (2)
   m_TagString: Untagged
@@ -272,19 +243,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8643003684911767373
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3683478749786194978}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6701681587626675668
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,6 +288,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70a8b8624570c354280ca4ebcd456c5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slowZombie: {fileID: 0}
+  fastZombie: {fileID: 0}
+  hasObstacles: 0
+  hasEnemies: 0
 --- !u!1 &7573030465502897895
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,6 +397,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6393252997366161524}
+  - component: {fileID: 4438955434789848922}
   m_Layer: 0
   m_Name: Road
   m_TagString: Untagged
@@ -459,3 +422,16 @@ Transform:
   m_Father: {fileID: 473314287456154937}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4438955434789848922
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9220619461253715915}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 0.2, z: 10}
+  m_Center: {x: 0, y: 0, z: 0}

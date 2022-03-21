@@ -9,6 +9,7 @@ TagManager:
   - Environment
   - Corridor
   - ObstaclePrefab
+  - Scores
   layers:
   - Default
   - TransparentFX

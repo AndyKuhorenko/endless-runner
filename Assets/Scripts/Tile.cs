@@ -9,13 +9,16 @@ public class Tile : MonoBehaviour
 
     public bool hasObstacles = false;
     public bool hasEnemies = false;
+    public int obstacleSpawnChance = 0;
 
     private const int tileDepth = 10;
-    private const float cellDepth = 2.5f;
-    private const float cellWidth = 2.5f;
+    private const float envCellDepth = 2.5f;
+    private const float envCellWidth = 2.5f;
     private const int envSpawnChance = 20;
     private const int corridorSpawnChance = 10;
-    private const int obstacleSpawnChance = 10;
+
+    private const float obstacleCellDepth = 3.5f;
+    private List<float> takenPosZ = new List<float>(); 
 
     private const float rows = 4;
     private const int columns = 6;
@@ -29,7 +32,7 @@ public class Tile : MonoBehaviour
         Middle,
         Right,
     };
-    private const int tracksCount = 3;
+
     private const float trackHeight = 0.1f;
 
     private GameObject[] envPrefabs;
@@ -73,17 +76,17 @@ public class Tile : MonoBehaviour
 
                     Quaternion randomRotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
 
-                    float newPosZ = transform.position.z + row * cellDepth;
+                    float newPosZ = transform.position.z + row * envCellDepth;
 
                     if (col < columns / 2)
                     {
-                        float newPosX = -4 - col * cellWidth;
+                        float newPosX = -4 - col * envCellWidth;
 
                         Instantiate(prefab, new Vector3(newPosX, 0, newPosZ), randomRotation, transform);
                     }
                     else
                     {
-                        float newPosX = -3.5f + col * cellWidth;
+                        float newPosX = -3.5f + col * envCellWidth;
 
                         Instantiate(prefab, new Vector3(newPosX, 0, newPosZ), randomRotation, transform);
                     }
@@ -130,42 +133,61 @@ public class Tile : MonoBehaviour
     {
         for (int x = -1; x <= (int)Track.Right; x++)
         {
-            for (int row = 0; row < rows; row++)
+            for (int row = 0; row < 3; row++)
             {
-                bool isSpawned = Random.Range(0, 100) < obstacleSpawnChance;
+                bool isSpawn = Random.Range(0, 100) < obstacleSpawnChance;
+                float posZ = transform.position.z + row * obstacleCellDepth;
 
-                if (isSpawned)
+                List<float> spawnedInZ = takenPosZ.FindAll(pos => pos == posZ);
+
+                if (isSpawn && spawnedInZ.Count < 2)
                 {
                     GameObject prefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length - 1)];
 
                     float posX = x;
                     float posY = trackHeight;
-                    float posZ = transform.position.z + row * cellDepth;
 
                     Quaternion rotation = Quaternion.Euler(0, 0, 0);
 
                     if (prefab.name.Contains("rail_end"))
                     {
-                        posY = 0;
-
                         if (x == -1)
                         {
-                            rotation = Quaternion.Euler(0, 180, 0);
-                            posX = x - 0.5f;
+                            posY = 0;
+                            posX = x - 0.25f;
                         }
                         else if (x == 0)
                         {
-                            // todo
+                            float randomNumber = Random.Range(0, 100);
+
+                            foreach (GameObject obstacle in obstaclePrefabs)
+                            {
+                                if (randomNumber > 50)
+                                {
+                                    if (obstacle.name == "rock") prefab = obstacle;
+                                }
+                                else
+                                {
+                                    if (obstacle.name == "rail") prefab = obstacle;
+                                }
+                            }
                         }
                         else if (x == 1)
                         {
-                            posX = x + 0.5f;
+                            posY = 0;
+                            posX = x + 0.25f;
+
+                            rotation = Quaternion.Euler(0, 180, 0);
                         }
                     }
+
+                    takenPosZ.Add(posZ);
+
+                    float randomPosZ = Random.Range(-1, 1);
+
+                    Instantiate(prefab, new Vector3(posX, posY, posZ + randomPosZ), rotation, transform);
                 }
             }
-
-            
         }
     }
 

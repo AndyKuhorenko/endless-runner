@@ -11,11 +11,16 @@ public class Player : MonoBehaviour
 
     private CharacterController controller;
     private GameObject body;
+
     [SerializeField] private Animator animator;
 
-    [SerializeField] private float runningSpeed = 4f;
+    [SerializeField] private float runningSpeed = 6f;
 
-    private float changeTrackSpeed = 2.5f;
+    [SerializeField] private UI ui;
+
+    [SerializeField] private TileManager tileManager;
+
+    private float changeTrackSpeed = 3f;
     private float verticalVelocity = 0f;
     private const float jumpVelocity = 4f;
     private const float jumpHeight = 0.5f;
@@ -26,6 +31,9 @@ public class Player : MonoBehaviour
     private bool isJumping = false;
     private bool isMovingLeft = false;
     private bool isMovingRight = false;
+
+    private float score = 0f;
+    private float lastUpdatedScore = 0f;
     
 
     void Start()
@@ -37,18 +45,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         ProcessMoving();
-    }
-
-    private void ProcessJumping()
-    {
-        animator.SetBool("isJumping", isJumping);
-
-        verticalVelocity = jumpVelocity;
-
-        if (transform.position.y > jumpHeight)
-        {
-            isJumping = false;
-        }
+        UpdateScore();
     }
 
     private void ProcessMoving()
@@ -74,6 +71,37 @@ public class Player : MonoBehaviour
         moveVector.y = verticalVelocity;
 
         controller.Move(moveVector * Time.deltaTime);
+    }
+
+    private void UpdateScore()
+    {
+        score = transform.position.z * 2;
+
+        ui.SetScoresTextNumber(score);
+
+        if (lastUpdatedScore > 1600) return;
+
+        if (score - lastUpdatedScore > 400)
+        {
+            runningSpeed += 1f;
+            changeTrackSpeed += 0.25f;
+            lastUpdatedScore += 400;
+
+            tileManager.IncreaseObstacleSpawnChance();
+        }
+
+    }
+
+    private void ProcessJumping()
+    {
+        animator.SetBool("isJumping", isJumping);
+
+        verticalVelocity = jumpVelocity;
+
+        if (transform.position.y > jumpHeight)
+        {
+            isJumping = false;
+        }
     }
 
     private void ProcessRotating()
@@ -199,14 +227,9 @@ public class Player : MonoBehaviour
         runningSpeed += addedSpeed;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        Debug.Log(other.name);
-    }
-
-    public void OnCollisionEnter(Collision collision)
-    {
-        print("player collision!");
+        if (hit.collider.tag == "ObstaclePrefab") print("game over!");
     }
 
     public float GetPosZ()
