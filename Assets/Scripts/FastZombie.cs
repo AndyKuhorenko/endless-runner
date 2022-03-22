@@ -11,7 +11,6 @@ public class FastZombie : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // transform.position = new Vector3(0, 0.1f, 10);
     }
 
     // Update is called once per frame

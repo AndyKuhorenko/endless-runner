@@ -14,7 +14,7 @@ public class TileManager : MonoBehaviour
     private float tileSpawnPosZ = 0;
 
     private List<Tile> activeTiles = new List<Tile>();
-    private int tileObstacleSpawnChance = 30;
+    private int tileObstacleSpawnChance = 20;
 
 
     private Player player;

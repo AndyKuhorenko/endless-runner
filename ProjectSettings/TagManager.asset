@@ -10,6 +10,7 @@ TagManager:
   - Corridor
   - ObstaclePrefab
   - Scores
+  - Enemy
   layers:
   - Default
   - TransparentFX

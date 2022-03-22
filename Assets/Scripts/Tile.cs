@@ -107,7 +107,7 @@ public class Tile : MonoBehaviour
 
                 float posX = x + Random.Range(-0.2f, 0.2f);
                 float posY = trackHeight;
-                float posZ = transform.position.z + tileDepth + Random.Range(-2, 2);
+                float posZ = transform.position.z + tileDepth + Random.Range(-3, 3);
 
                 Quaternion rotation = Quaternion.Euler(0, 180, 0);
 

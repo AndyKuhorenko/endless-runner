@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] private TileManager tileManager;
 
+    [SerializeField] private AudioManager audioManager;
+
     private float changeTrackSpeed = 3f;
     private float verticalVelocity = 0f;
     private const float jumpVelocity = 4f;
@@ -95,6 +97,8 @@ public class Player : MonoBehaviour
     private void ProcessJumping()
     {
         animator.SetBool("isJumping", isJumping);
+
+        audioManager.PlayJump();
 
         verticalVelocity = jumpVelocity;
 
@@ -229,7 +233,26 @@ public class Player : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.collider.tag == "ObstaclePrefab") print("game over!");
+        if (hit.collider.tag == "ObstaclePrefab")
+        {
+            if (UI.currentState != GameState.Fail)
+            {
+                ui.SetFailGameState();
+                audioManager.PlayObstacleHit();
+            }
+        }
+        else if (hit.collider.tag == "Enemy")
+        {
+            AudioSource zombieSound = hit.collider.gameObject.GetComponentInChildren<AudioSource>();
+
+            zombieSound.Stop();
+
+            if (UI.currentState != GameState.Fail)
+            {
+                ui.SetFailGameState();
+                audioManager.PlayZombieHit();
+            }
+        }
     }
 
     public float GetPosZ()
