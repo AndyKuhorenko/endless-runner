@@ -13,6 +13,8 @@ public class UI : MonoBehaviour
     [SerializeField] TextMeshProUGUI scoresText;
     [SerializeField] TextMeshProUGUI scoresTextNumber;
 
+    [SerializeField] TextMeshProUGUI ammoText;
+
     [SerializeField] UnityEngine.UI.Button pauseButton;
     [SerializeField] UnityEngine.UI.Button pauseShade;
 
@@ -144,6 +146,11 @@ public class UI : MonoBehaviour
 
         Time.timeScale = 0;
         currentState = GameState.Fail;
+    }
+
+    public void SetAmmoCount(int newAmmo)
+    {
+        ammoText.text = $"Ammo: {newAmmo}";
     }
 
     private void RestartGame()

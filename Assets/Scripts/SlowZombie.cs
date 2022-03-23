@@ -2,19 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlowZombie : MonoBehaviour
+public class SlowZombie : Enemy
 {
     [SerializeField] float speed = 1f;
 
-    private const float trackHeight = 0.1f;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        // transform.position = new Vector3(0, 0.1f, 10);
-    }
-
-    // Update is called once per frame
     void Update()
     {
         float newPosZ = transform.position.z - speed * Time.deltaTime;

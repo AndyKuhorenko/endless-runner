@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public GameObject slowZombie;
-    public GameObject fastZombie;
+    public SlowZombie slowZombie;
+    public FastZombie fastZombie;
+    public Weapon weapon;
 
     public bool hasObstacles = false;
     public bool hasEnemies = false;
@@ -25,6 +26,8 @@ public class Tile : MonoBehaviour
 
     private int zombieSpawnCount = 0;
     private int zombieSpawnChance = 20;
+
+    private int weaponSpawnChance = 20;
 
     private enum Track
     {
@@ -111,7 +114,7 @@ public class Tile : MonoBehaviour
 
                 Quaternion rotation = Quaternion.Euler(0, 180, 0);
 
-                GameObject zombie;
+                Enemy zombie;
 
                 if (randomNumber > 50)
                 {
@@ -135,12 +138,14 @@ public class Tile : MonoBehaviour
         {
             for (int row = 0; row < 3; row++)
             {
-                bool isSpawn = Random.Range(0, 100) < obstacleSpawnChance;
+                bool isObstacleSpawn = Random.Range(0, 100) < obstacleSpawnChance;
+                bool isWeaponSpawn = Random.Range(0, 100) < weaponSpawnChance;
+
                 float posZ = transform.position.z + row * obstacleCellDepth;
 
                 List<float> spawnedInZ = takenPosZ.FindAll(pos => pos == posZ);
 
-                if (isSpawn && spawnedInZ.Count < 2)
+                if (isObstacleSpawn && spawnedInZ.Count < 2)
                 {
                     GameObject prefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length - 1)];
 
@@ -186,6 +191,10 @@ public class Tile : MonoBehaviour
                     float randomPosZ = Random.Range(-1, 1);
 
                     Instantiate(prefab, new Vector3(posX, posY, posZ + randomPosZ), rotation, transform);
+                }
+                else if (isWeaponSpawn)
+                {
+                    Instantiate(weapon, new Vector3(x, trackHeight + 0.5f, posZ), Quaternion.identity, transform);
                 }
             }
         }

@@ -36,18 +36,42 @@ public class Player : MonoBehaviour
 
     private float score = 0f;
     private float lastUpdatedScore = 0f;
-    
+
+    private float touchX;
+    private float touchY;
+
+    private bool hasWeapon = false;
+    private const int shootRange = 15;
+    private int ammo = 100;
+    private bool canShoot = true;
+    private float timeBetweenShots = 0.2f;
+
+    private bool godMode = true;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
         body = GameObject.FindGameObjectWithTag("PlayerBody");
+        SetCurrentAmmo();
     }
 
     void Update()
     {
         ProcessMoving();
         UpdateScore();
+    }
+
+    private void ProcessRaycast()
+    {
+        RaycastHit hit;
+
+        Vector3 shotOrigin = new Vector3(body.transform.position.x, body.transform.position.y + 0.6f, body.transform.position.z);
+
+        if (Physics.Raycast(shotOrigin, body.transform.forward, out hit, shootRange))
+        {
+            Debug.DrawLine(shotOrigin, hit.point, Color.red, 20f, false);
+            Debug.Log(hit.transform.gameObject.name);
+        }
     }
 
     private void ProcessMoving()
@@ -140,11 +164,56 @@ public class Player : MonoBehaviour
 
     private void HandleInputs()
     {
+        HandleFireInputs();
+
         float vectorX = Input.GetAxisRaw("Horizontal");
 
         isMovingLeft = vectorX < 0;
         isMovingRight = vectorX > 0;
 
+        // Mobile inputs
+        for (int i = 0; i < Input.touchCount; i++)
+        {
+            Touch touch = Input.GetTouch(i);
+
+            switch (touch.phase)
+            {
+                case TouchPhase.Began:
+                    touchX = touch.position.x;
+                    touchY = touch.position.y;
+                    break;
+                case TouchPhase.Moved:
+                    if (touch.position.y - 200 > touchY)
+                    {
+                        if (controller.isGrounded && !isJumping) isJumping = true;
+                    }
+                    else if ((touch.position.x - 40) > touchX)
+                    {
+                        vectorX = 1;
+                        isMovingRight = true;
+                    }
+                    else if ((touch.position.x + 40) < touchX)
+                    {
+                        vectorX = -1;
+                        isMovingLeft = true;
+                    }
+                    break;
+                case TouchPhase.Ended:
+                    vectorX = 0;
+                    isMovingLeft = false;
+                    isMovingRight = false;
+                    break;
+                case TouchPhase.Canceled:
+                    vectorX = 0;
+                    isMovingLeft = false;
+                    isMovingRight = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Stop moving if in max right or left position on road
         if (transform.position.x >= offsetPosX && isMovingRight)
         {
             isMovingRight = false;
@@ -172,6 +241,32 @@ public class Player : MonoBehaviour
         }
         
 
+    }
+
+    private void HandleFireInputs()
+    {
+        if (Input.GetMouseButtonDown(0) && canShoot && UI.currentState == GameState.Active)
+        {
+            StartCoroutine(Shoot());
+        }
+    }
+
+    IEnumerator Shoot()
+    {
+        canShoot = false;
+
+        if (ammo > 0)
+        {
+            ProcessRaycast();
+
+            audioManager.PlayShot();
+
+            ammo--;
+            SetCurrentAmmo();
+        }
+
+        yield return new WaitForSeconds(timeBetweenShots);
+        canShoot = true;
     }
 
     private void RotateToLeft()
@@ -231,8 +326,27 @@ public class Player : MonoBehaviour
         runningSpeed += addedSpeed;
     }
 
+    public void PickWeapon()
+    {
+        if (!hasWeapon)
+        {
+            hasWeapon = true;
+        }
+
+        ammo++;
+
+        print(ammo);
+    }
+
+    private void SetCurrentAmmo()
+    {
+        ui.SetAmmoCount(ammo);
+    }
+
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        if (godMode) return;
+
         if (hit.collider.tag == "ObstaclePrefab")
         {
             if (UI.currentState != GameState.Fail)

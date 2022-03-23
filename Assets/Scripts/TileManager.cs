@@ -7,8 +7,9 @@ public class TileManager : MonoBehaviour
 {
     [SerializeField] private int tilesInScene = 3;
     [SerializeField] private Tile tile;
-    [SerializeField] GameObject slowZombie;
-    [SerializeField] GameObject fastZombie;
+    [SerializeField] SlowZombie slowZombie;
+    [SerializeField] FastZombie fastZombie;
+    [SerializeField] Weapon weapon;
 
     private readonly int tileLength = 10;
     private float tileSpawnPosZ = 0;
@@ -85,6 +86,8 @@ public class TileManager : MonoBehaviour
 
             newTile.slowZombie = slowZombie;
             newTile.fastZombie = fastZombie;
+
+            newTile.weapon = weapon;
         }
 
         activeTiles.Add(newTile);

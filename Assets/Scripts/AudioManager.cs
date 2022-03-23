@@ -11,6 +11,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioSource menuMusic;
     [SerializeField] AudioSource gameMusic;
 
+    [SerializeField] AudioSource shot;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +44,11 @@ public class AudioManager : MonoBehaviour
     {
         menuMusic.Stop();
         gameMusic.Play();
+    }
+
+    public void PlayShot()
+    {
+        shot.Play();
     }
 
     // Update is called once per frame
