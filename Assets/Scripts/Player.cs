@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Animations.Rigging;
+
 
 public class Player : MonoBehaviour
 {
@@ -16,11 +19,18 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float runningSpeed = 6f;
 
+    [SerializeField] private int ammo = 0;
+
     [SerializeField] private UI ui;
 
     [SerializeField] private TileManager tileManager;
 
     [SerializeField] private AudioManager audioManager;
+
+    [SerializeField] private GameObject weapon;
+    [SerializeField] private GameObject ammoShell;
+    [SerializeField] private ParticleSystem muzzleFlash;
+    private RigBuilder weaponRigBuilder;
 
     private float changeTrackSpeed = 3f;
     private float verticalVelocity = 0f;
@@ -42,16 +52,17 @@ public class Player : MonoBehaviour
 
     private bool hasWeapon = false;
     private const int shootRange = 15;
-    private int ammo = 100;
     private bool canShoot = true;
-    private float timeBetweenShots = 0.2f;
+    private float timeBetweenShots = 0.5f;
 
     private bool godMode = true;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        weaponRigBuilder = GetComponentInChildren<RigBuilder>();
         body = GameObject.FindGameObjectWithTag("PlayerBody");
+
         SetCurrentAmmo();
     }
 
@@ -70,6 +81,19 @@ public class Player : MonoBehaviour
         if (Physics.Raycast(shotOrigin, body.transform.forward, out hit, shootRange))
         {
             Debug.DrawLine(shotOrigin, hit.point, Color.red, 20f, false);
+
+            SlowZombie slowZombie = hit.transform.GetComponent<SlowZombie>();
+            FastZombie fastZombie = hit.transform.GetComponent<FastZombie>();
+
+            if (slowZombie)
+            {
+                slowZombie.PlayDeathAnimation();
+            }
+            else if (fastZombie)
+            {
+                fastZombie.PlayDeathAnimation();
+            }
+
             Debug.Log(hit.transform.gameObject.name);
         }
     }
@@ -261,6 +285,14 @@ public class Player : MonoBehaviour
 
             audioManager.PlayShot();
 
+            GameObject gunShell = Instantiate(ammoShell, weapon.transform.position, Quaternion.Euler(90, 0, 0));
+
+            gunShell.GetComponent<Rigidbody>().AddForce(new Vector3(0.02f, 0.003f, 0.002f));
+
+            Destroy(gunShell, 1.5f);
+
+            muzzleFlash.Play();
+
             ammo--;
             SetCurrentAmmo();
         }
@@ -331,11 +363,15 @@ public class Player : MonoBehaviour
         if (!hasWeapon)
         {
             hasWeapon = true;
+
+            weaponRigBuilder.enabled = true;
+
+            weapon.gameObject.SetActive(true);
         }
 
         ammo++;
 
-        print(ammo);
+        SetCurrentAmmo();
     }
 
     private void SetCurrentAmmo()

@@ -5,14 +5,14 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField] GameObject body;
-    [SerializeField] Player player;
+    private Player player;
 
-    float currentRotation = 0f;
     float angleY = 2f;
     // Start is called before the first frame update
     void Start()
     {
-
+        player = FindObjectOfType<Player>();
+        body.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
     }
 
     // Update is called once per frame
@@ -25,8 +25,6 @@ public class Weapon : MonoBehaviour
     {
 
         Destroy(gameObject);
-
-        print(1);
 
         player.PickWeapon();
     }

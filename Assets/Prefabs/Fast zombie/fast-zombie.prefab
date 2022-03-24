@@ -602,10 +602,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.68214566
   m_Height: 4.0382257
   m_Direction: 1
-  m_Center: {x: 0, y: 2.1827626, z: 0}
+  m_Center: {x: 0.01761188, y: 2.1827626, z: 0}
 --- !u!114 &1719332700531755829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -619,6 +619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
+  animator: {fileID: -241783522684483282}
 --- !u!82 &2305694057863529392
 AudioSource:
   m_ObjectHideFlags: 0
