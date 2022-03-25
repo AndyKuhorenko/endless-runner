@@ -459,7 +459,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -5367,7 +5367,7 @@ GameObject:
   - component: {fileID: 4318833658136253029}
   - component: {fileID: 703694440}
   - component: {fileID: 703694438}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5423,7 +5423,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 1420611367}
   runningSpeed: 6
-  ammo: 9
+  ammo: 100
   ui: {fileID: 0}
   tileManager: {fileID: 0}
   audioManager: {fileID: 0}

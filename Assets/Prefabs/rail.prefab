@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 829804984550004899}
   - component: {fileID: 2425964201771082020}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: rail
-  m_TagString: Untagged
+  m_TagString: ObstaclePrefab
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 7603684135658091457}
   - component: {fileID: 3876713590560891593}
   - component: {fileID: 6137622158641384686}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: rail
   m_TagString: Untagged
   m_Icon: {fileID: 0}

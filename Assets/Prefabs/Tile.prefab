@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2111157904586563760}
   - component: {fileID: 3504077541475330548}
   - component: {fileID: 1912728598661670151}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Track
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 6499417902438000440}
   - component: {fileID: 7879264355429518997}
   - component: {fileID: 3038552690660991368}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Track (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 5648537991807958978}
   - component: {fileID: 1701850977585296247}
   - component: {fileID: 5815476186113487356}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Track (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,8 +290,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slowZombie: {fileID: 0}
   fastZombie: {fileID: 0}
+  weapon: {fileID: 0}
   hasObstacles: 0
   hasEnemies: 0
+  obstacleSpawnChance: 0
 --- !u!1 &7573030465502897895
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,7 +400,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6393252997366161524}
   - component: {fileID: 4438955434789848922}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Road
   m_TagString: Untagged
   m_Icon: {fileID: 0}

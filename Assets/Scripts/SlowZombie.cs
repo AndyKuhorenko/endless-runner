@@ -6,9 +6,14 @@ public class SlowZombie : Enemy
 {
     [SerializeField] float speed = 1f;
     [SerializeField] Animator animator;
+    [SerializeField] ParticleSystem deathParticles;
 
-    public void PlayDeathAnimation()
+    public void PlayDeathAnimation(Vector3 hitPos)
     {
+        deathParticles.gameObject.transform.position = hitPos;
+        deathParticles.Play();
+
+        animator.speed = Random.Range(1, 1.5f);
         animator.SetBool("isDead", true);
 
         GetComponent<AudioSource>().Stop();

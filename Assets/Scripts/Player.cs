@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     private CharacterController controller;
     private GameObject body;
 
+    [SerializeField] private bool godMode = true;
+
     [SerializeField] private Animator animator;
 
     [SerializeField] private float runningSpeed = 6f;
@@ -55,7 +57,7 @@ public class Player : MonoBehaviour
     private bool canShoot = true;
     private float timeBetweenShots = 0.5f;
 
-    private bool godMode = true;
+    private int killedEnemies = 0;
 
     void Start()
     {
@@ -70,32 +72,7 @@ public class Player : MonoBehaviour
     {
         ProcessMoving();
         UpdateScore();
-    }
-
-    private void ProcessRaycast()
-    {
-        RaycastHit hit;
-
-        Vector3 shotOrigin = new Vector3(body.transform.position.x, body.transform.position.y + 0.6f, body.transform.position.z);
-
-        if (Physics.Raycast(shotOrigin, body.transform.forward, out hit, shootRange))
-        {
-            Debug.DrawLine(shotOrigin, hit.point, Color.red, 20f, false);
-
-            SlowZombie slowZombie = hit.transform.GetComponent<SlowZombie>();
-            FastZombie fastZombie = hit.transform.GetComponent<FastZombie>();
-
-            if (slowZombie)
-            {
-                slowZombie.PlayDeathAnimation();
-            }
-            else if (fastZombie)
-            {
-                fastZombie.PlayDeathAnimation();
-            }
-
-            Debug.Log(hit.transform.gameObject.name);
-        }
+        MoveCrosshair();
     }
 
     private void ProcessMoving()
@@ -301,6 +278,67 @@ public class Player : MonoBehaviour
         canShoot = true;
     }
 
+    private void MoveCrosshair()
+    {
+        Vector3 weaponPos = weapon.transform.position;
+        Vector3 aimPosForward = weapon.transform.forward;
+        Vector3 aimPos = new Vector3(aimPosForward.x, aimPosForward.y, aimPosForward.z);
+
+        Vector3 hit = weaponPos + aimPos;
+        Debug.Log(aimPos);
+        Debug.Log(hit.x);
+        if (Input.GetMouseButton(1))
+        {
+            Debug.DrawLine(weaponPos, hit, Color.red, 50f, false);
+
+        }
+
+        ui.MoveCrosshair(aimPos);
+    }
+
+    private void ProcessRaycast()
+    {
+
+        Vector3 shotOrigin = weapon.transform.position;
+
+        float rayThickness = 0.6f;
+
+        // int layerMask = 1 << 2;
+
+        // Collide with every layer except the second
+        // layerMask = ~layerMask;
+
+        int layerMask = 1 << 7; // Only with 7th layer
+
+        RaycastHit[] hits = Physics.SphereCastAll(shotOrigin, rayThickness, weapon.transform.forward, shootRange, layerMask);
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            RaycastHit hit = hits[i];
+
+            Debug.Log(hit);
+            Debug.DrawLine(shotOrigin, hit.point, Color.red, 20f, false);
+
+            SlowZombie slowZombie = hit.transform.GetComponent<SlowZombie>();
+            FastZombie fastZombie = hit.transform.GetComponent<FastZombie>();
+
+            if (slowZombie)
+            {
+                slowZombie.PlayDeathAnimation(hit.point);
+                killedEnemies++;
+            }
+            else if (fastZombie)
+            {
+                fastZombie.PlayDeathAnimation(hit.point);
+                killedEnemies++;
+            }
+
+            SetCurrentKills();
+
+            Debug.Log(hit.transform.gameObject.name);
+        }
+    }
+
     private void RotateToLeft()
     {
         float movingSpeed = changeTrackSpeed * Time.deltaTime;
@@ -377,6 +415,11 @@ public class Player : MonoBehaviour
     private void SetCurrentAmmo()
     {
         ui.SetAmmoCount(ammo);
+    }
+
+    private void SetCurrentKills()
+    {
+        ui.SetKillsText(killedEnemies);
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)

@@ -14,6 +14,7 @@ public class UI : MonoBehaviour
     [SerializeField] TextMeshProUGUI scoresTextNumber;
 
     [SerializeField] TextMeshProUGUI ammoText;
+    [SerializeField] TextMeshProUGUI killsText;
 
     [SerializeField] UnityEngine.UI.Button pauseButton;
     [SerializeField] UnityEngine.UI.Button pauseShade;
@@ -28,7 +29,9 @@ public class UI : MonoBehaviour
     [SerializeField] UnityEngine.UI.Image startPanel;
     [SerializeField] TextMeshProUGUI bestResultScore;
 
-    [SerializeField] public static GameState currentState = GameState.Start;
+    [SerializeField] Crosshair crosshair;
+
+    [SerializeField] public static GameState currentState = GameState.Active;
 
     private float currentScore;
 
@@ -151,6 +154,16 @@ public class UI : MonoBehaviour
     public void SetAmmoCount(int newAmmo)
     {
         ammoText.text = $"Ammo: {newAmmo}";
+    }
+
+    public void SetKillsText(int kills)
+    {
+        killsText.text = $"Kills: {kills}";
+    }
+
+    public void MoveCrosshair(Vector3 aimPos)
+    {
+        crosshair.Move(aimPos);
     }
 
     private void RestartGame()
