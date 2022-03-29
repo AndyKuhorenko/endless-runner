@@ -31,6 +31,8 @@ public class UI : MonoBehaviour
 
     [SerializeField] Crosshair crosshair;
 
+    [SerializeField] Canvas canvasScaler;
+
     [SerializeField] public static GameState currentState = GameState.Active;
 
     private float currentScore;
@@ -49,6 +51,11 @@ public class UI : MonoBehaviour
         resumeButton.onClick.AddListener(SetActiveGameState);
 
         restartButton.onClick.AddListener(RestartGame);
+
+        if (SystemInfo.deviceType != DeviceType.Desktop)
+        {
+            canvasScaler.scaleFactor = 2;
+        }
 
         switch (currentState)
         {

@@ -15,7 +15,7 @@ public class Tile : MonoBehaviour
     private const int tileDepth = 10;
     private const float envCellDepth = 2.5f;
     private const float envCellWidth = 2.5f;
-    private const int envSpawnChance = 20;
+    private const int envSpawnChance = 10;
     private const int corridorSpawnChance = 10;
 
     private const float obstacleCellDepth = 3.5f;

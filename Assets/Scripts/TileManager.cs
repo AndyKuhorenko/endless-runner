@@ -33,7 +33,7 @@ public class TileManager : MonoBehaviour
             }
             else
             {
-                AddTile(true);
+                AddTile(false);
             }
         }
 
@@ -54,7 +54,7 @@ public class TileManager : MonoBehaviour
         if (playerPosZ > (tileSpawnPosZ - (tilesInScene - passedTiles) * tileLength))
         {
             RemoveTile();
-            AddTile(true);
+            AddTile(false);
         }
     }
     private void SetNewPlayerPosZ()
