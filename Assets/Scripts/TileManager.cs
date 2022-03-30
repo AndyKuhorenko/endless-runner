@@ -10,6 +10,7 @@ public class TileManager : MonoBehaviour
     [SerializeField] SlowZombie slowZombie;
     [SerializeField] FastZombie fastZombie;
     [SerializeField] Weapon weapon;
+    [SerializeField] GameObject monorail;
 
     private readonly int tileLength = 10;
     private float tileSpawnPosZ = 0;
@@ -33,7 +34,7 @@ public class TileManager : MonoBehaviour
             }
             else
             {
-                AddTile(false);
+                AddTile(true);
             }
         }
 
@@ -54,7 +55,7 @@ public class TileManager : MonoBehaviour
         if (playerPosZ > (tileSpawnPosZ - (tilesInScene - passedTiles) * tileLength))
         {
             RemoveTile();
-            AddTile(false);
+            AddTile(true);
         }
     }
     private void SetNewPlayerPosZ()
@@ -88,6 +89,8 @@ public class TileManager : MonoBehaviour
             newTile.fastZombie = fastZombie;
 
             newTile.weapon = weapon;
+
+            newTile.monorail = monorail;
         }
 
         activeTiles.Add(newTile);

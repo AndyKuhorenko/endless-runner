@@ -47,12 +47,11 @@ public class Player : MonoBehaviour
     private float rotation = 0f;
 
     private bool isJumping = false;
+    private bool isFalling = false;
 
     private bool isMovingLeft = false;
-    private bool isLeftKeysDoublePressed = false;
 
     private bool isMovingRight = false;
-    private bool isRightKeysDoublePressed = false;
 
     private float score = 0f;
     private float lastUpdatedScore = 0f;
@@ -70,6 +69,11 @@ public class Player : MonoBehaviour
     {
         ProcessMoving();
         UpdateScore();
+
+        if (isFalling)
+        {
+            FallInCrater();
+        }
     }
 
     private void ProcessMoving()
@@ -91,8 +95,6 @@ public class Player : MonoBehaviour
         if (transform.position.x >= offsetPosX && isMovingRight)
         {
             isMovingRight = false;
-            isRightKeysDoublePressed = false;
-            isLeftKeysDoublePressed = false;
 
             currentTrack = Track.Right;
 
@@ -101,8 +103,6 @@ public class Player : MonoBehaviour
         else if (transform.position.x <= -offsetPosX && isMovingLeft)
         {
             isMovingLeft = false;
-            isLeftKeysDoublePressed = false;
-            isRightKeysDoublePressed = false;
 
             currentTrack = Track.Left;
 
@@ -114,7 +114,7 @@ public class Player : MonoBehaviour
             {
                 moveVector.x = -changeTrackSpeed;
 
-                if (currentTrack == Track.Middle && transform.position.x < 0 && !isRightKeysDoublePressed)
+                if (currentTrack == Track.Middle && transform.position.x < 0)
                 {
                     isMovingLeft = false;
 
@@ -126,7 +126,7 @@ public class Player : MonoBehaviour
             {
                 moveVector.x = changeTrackSpeed;
 
-                if (currentTrack == Track.Middle && transform.position.x > 0 && !isLeftKeysDoublePressed)
+                if (currentTrack == Track.Middle && transform.position.x > 0)
                 {
                     isMovingRight = false;
 
@@ -154,7 +154,7 @@ public class Player : MonoBehaviour
 
         if (score - lastUpdatedScore > 400)
         {
-            runningSpeed += 1f;
+            runningSpeed += 0.5f;
             changeTrackSpeed += 0.25f;
             lastUpdatedScore += 400;
 
@@ -208,10 +208,8 @@ public class Player : MonoBehaviour
 
     private void HandleInputs()
     {
-        if (Input.GetKeyDown("a"))
+        if (GetLeftInputKeys())
         {
-            if (isMovingLeft) isLeftKeysDoublePressed = true;
-
             isMovingLeft = true;
             isMovingRight = false;
 
@@ -221,15 +219,20 @@ public class Player : MonoBehaviour
                     currentTrack = Track.Left;
                     break;
                 case Track.Right:
-                    currentTrack = Track.Middle;
+
+                    // If character crossed the middle track stop at middle else return to left track
+                    if (transform.position.x > 0)
+                    {
+                        currentTrack = Track.Middle;
+                    }
+                    else currentTrack = Track.Left;
+
                     break;
             }
         }
         
-        if (Input.GetKeyDown("d"))
+        if (GetRightInputKeys())
         {
-            if (isMovingRight) isRightKeysDoublePressed = true;
-
             isMovingRight = true;
             isMovingLeft = false;
 
@@ -239,11 +242,17 @@ public class Player : MonoBehaviour
                     currentTrack = Track.Right;
                     break;
                 case Track.Left:
-                    currentTrack = Track.Middle;
+
+                    // If character crossed the middle track stop at middle else return to right track
+                    if (transform.position.x < 0)
+                    {
+                        currentTrack = Track.Middle;
+                    }
+                    else currentTrack = Track.Right;
+
                     break;
             }
         }
-        Debug.Log(currentTrack);
 
         // Mobile inputs
         for (int i = 0; i < Input.touchCount; i++)
@@ -285,7 +294,7 @@ public class Player : MonoBehaviour
 
         if (controller.isGrounded && !isJumping)
         {
-            if (Input.GetKeyDown("w") || Input.GetKeyDown("space") || Input.GetKeyDown("up"))
+            if ((Input.GetKeyDown("w") || Input.GetKeyDown("space") || Input.GetKeyDown("up")) && !isFalling)
             {
                 isJumping = true;
             }
@@ -344,6 +353,16 @@ public class Player : MonoBehaviour
         body.transform.rotation = Quaternion.Euler(0, rotation, 0);
     }
 
+    private bool GetRightInputKeys()
+    {
+        return (Input.GetKeyDown("d") || Input.GetKeyDown("right")) && !isFalling;
+    }
+
+    private bool GetLeftInputKeys()
+    {
+        return (Input.GetKeyDown("a") || Input.GetKeyDown("left")) && !isFalling;
+    }
+
     public void AddRunningSpeed(float addedSpeed)
     {
         runningSpeed += addedSpeed;
@@ -378,6 +397,35 @@ public class Player : MonoBehaviour
                 audioManager.PlayZombieHit();
             }
         }
+    }
+
+    private void FallInCrater()
+    {
+        runningSpeed = 0f;
+        body.transform.position = body.transform.position + Vector3.down * 2 * Time.deltaTime;
+
+        animator.SetBool("isJumping", true);
+
+        playerWeapon.DropWeapon();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (godMode) return;
+
+        if (other.name.Contains("crater"))
+        {
+            isFalling = true;
+
+            StartCoroutine(SetFailGameState());
+        }
+    }
+
+    IEnumerator SetFailGameState()
+    {
+        yield return new WaitForSecondsRealtime(2.5f);
+
+        if (UI.currentState != GameState.Fail) ui.SetFailGameState();
     }
 
     public float GetPosZ()

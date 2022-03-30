@@ -12,7 +12,6 @@ public class ServerData : MonoBehaviour
 {
     TextMeshProUGUI uiText;
     private const string url = "https://jsonplaceholder.typicode.com/todos/";
-    Dictionary<string, string> data = new Dictionary<string, string>();
 
     void Start()
     {

@@ -15,6 +15,8 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField] private AudioManager audioManager;
     [SerializeField] private RigBuilder rigBuilder;
 
+    private Rigidbody rb;
+
     private bool canShoot = true;
 
     private const int shootRange = 15;
@@ -23,10 +25,11 @@ public class PlayerWeapon : MonoBehaviour
 
     private int killedEnemies = 0;
 
-    private bool hasWeapon = false;
+    public bool hasWeapon = false;
 
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
         SetCurrentAmmo();
     }
 
@@ -38,7 +41,7 @@ public class PlayerWeapon : MonoBehaviour
 
     public void HandleFireInputs()
     {
-        if (Input.GetMouseButtonDown(0) && canShoot && UI.currentState == GameState.Active)
+        if (Input.GetMouseButtonDown(0) && canShoot && UI.currentState == GameState.Active && hasWeapon)
         {
             StartCoroutine(Shoot());
         }
@@ -84,6 +87,31 @@ public class PlayerWeapon : MonoBehaviour
         ammo++;
 
         SetCurrentAmmo();
+    }
+
+    public void DropWeapon()
+    {
+        if (hasWeapon)
+        {
+            hasWeapon = false;
+
+            rigBuilder.enabled = false;
+
+            GameObject weapon = Instantiate(gameObject, transform.position, Quaternion.Euler(0, 0, 0));
+
+            weapon.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
+
+            weapon.GetComponent<BoxCollider>().enabled = true;
+
+            weapon.GetComponent<Rigidbody>().useGravity = true;
+
+            weapon.GetComponent<Rigidbody>().AddForce(new Vector3(45f, 45f, 0f));
+
+            gameObject.SetActive(false);
+
+            Destroy(weapon, 5f);
+        }
+
     }
 
 

@@ -7,6 +7,7 @@ public class Tile : MonoBehaviour
     public SlowZombie slowZombie;
     public FastZombie fastZombie;
     public Weapon weapon;
+    public GameObject monorail;
 
     public bool hasObstacles = false;
     public bool hasEnemies = false;
@@ -15,8 +16,12 @@ public class Tile : MonoBehaviour
     private const int tileDepth = 10;
     private const float envCellDepth = 2.5f;
     private const float envCellWidth = 2.5f;
+
     private const int envSpawnChance = 10;
     private const int corridorSpawnChance = 10;
+
+    private bool hasMonorail = false;
+    private const int monorailSpawnChance = 100;
 
     private const float obstacleCellDepth = 3.5f;
     private List<float> takenPosZ = new List<float>(); 
@@ -27,7 +32,7 @@ public class Tile : MonoBehaviour
     private int zombieSpawnCount = 0;
     private int zombieSpawnChance = 20;
 
-    private int weaponSpawnChance = 20;
+    private int weaponSpawnChance = 5;
 
     private enum Track
     {
@@ -47,7 +52,16 @@ public class Tile : MonoBehaviour
 
         bool hasCorridor = Random.Range(0, 100) < corridorSpawnChance;
 
-        if (hasCorridor) CreateCorridor();
+        if (hasCorridor)
+        {
+            CreateCorridor();
+        }
+        else
+        {
+            hasMonorail = Random.Range(0, 100) < monorailSpawnChance;
+
+            if (hasMonorail) CreateMonorail();
+        }
 
         CreateEnvironment();
 
@@ -63,6 +77,11 @@ public class Tile : MonoBehaviour
         Instantiate(corridor, transform);
     }
 
+    private void CreateMonorail()
+    {
+        Instantiate(monorail, new Vector3(0, 0, transform.position.z + tileDepth / 2), Quaternion.Euler(0, -90, 0), transform);
+    }
+
     private void CreateEnvironment()
     {
         envPrefabs = GameObject.FindGameObjectsWithTag("EnvironmentPrefab");
@@ -73,7 +92,8 @@ public class Tile : MonoBehaviour
             {
                 bool isSpawned = Random.Range(0, 100) < envSpawnChance;
 
-                if (isSpawned)
+                // 2nd row is monorail position
+                if ((hasMonorail && row != 2 && isSpawned) || (!hasMonorail && isSpawned))
                 {
                     GameObject prefab = envPrefabs[Random.Range(0, envPrefabs.Length - 1)];
 
@@ -190,7 +210,15 @@ public class Tile : MonoBehaviour
 
                     float randomPosZ = Random.Range(-1, 1);
 
-                    Instantiate(prefab, new Vector3(posX, posY, posZ + randomPosZ), rotation, transform);
+                    if (!prefab.name.Contains("rail_middle"))
+                    {
+                        Instantiate(prefab, new Vector3(posX, posY, posZ + randomPosZ), rotation, transform);
+                    }
+                    else if (prefab.name.Contains("rail_middle") && posX == 0)
+                    {
+                        Instantiate(prefab, new Vector3(posX, posY, posZ + randomPosZ), rotation, transform);
+                    }
+
                 }
                 else if (isWeaponSpawn)
                 {
