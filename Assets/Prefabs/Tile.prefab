@@ -293,7 +293,7 @@ MonoBehaviour:
   slowZombie: {fileID: 0}
   fastZombie: {fileID: 0}
   weapon: {fileID: 0}
-  monorail: {fileID: 0}
+  monorails: []
   hasObstacles: 0
   hasEnemies: 0
   obstacleSpawnChance: 0
@@ -357,7 +357,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 27ed8f6d0fa6be4428aff6e2fba4de5f, type: 2}
+  - {fileID: 2100000, guid: 5932f2760d420ff4da6d82bd54fe830d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -511,6 +511,10 @@ PrefabInstance:
       propertyPath: m_ReceiveShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 26dcfd535de268c469f7206af2fcd892, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9d92ebf08ea926f4d9af70c395822699, type: 2}
     - target: {fileID: 919132149155446097, guid: 26dcfd535de268c469f7206af2fcd892, type: 3}
       propertyPath: m_Name
       value: rock_largeA (1)
@@ -593,6 +597,10 @@ PrefabInstance:
       propertyPath: m_ReceiveShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 26dcfd535de268c469f7206af2fcd892, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9d92ebf08ea926f4d9af70c395822699, type: 2}
     - target: {fileID: 919132149155446097, guid: 26dcfd535de268c469f7206af2fcd892, type: 3}
       propertyPath: m_Name
       value: rock_largeA

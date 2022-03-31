@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 70a8b8624570c354280ca4ebcd456c5f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - slowZombie: {instanceID: 0}
+  - fastZombie: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

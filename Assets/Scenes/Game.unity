@@ -2750,7 +2750,10 @@ MonoBehaviour:
   slowZombie: {fileID: 919132148917735548, guid: 5366bd6fd9bf98345ae8d4894cee6bd0, type: 3}
   fastZombie: {fileID: 1719332700531755829, guid: f8452402f3d806940aba724c073ea4c8, type: 3}
   weapon: {fileID: 7210847844253944002, guid: d6c80324351841648ab06d87821b2fcf, type: 3}
-  monorail: {fileID: 3675809595316265496, guid: ab9543a9dc5b7d9489f8477f05862305, type: 3}
+  monorails:
+  - {fileID: 482403525244773176, guid: 590a31c821315624da5a0eb49878c0a6, type: 3}
+  - {fileID: 482403525244773176, guid: 9b10adb7b34f92d4aa9068667c5dda2c, type: 3}
+  - {fileID: 482403525244773176, guid: d9baca2c880aa674289018d9b289ce67, type: 3}
 --- !u!1001 &1290721756
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4632,6 +4635,10 @@ PrefabInstance:
       propertyPath: ui
       value: 
       objectReference: {fileID: 644903086}
+    - target: {fileID: 703694438, guid: 353c6910fa926cd4a9e66bea474a8768, type: 3}
+      propertyPath: godMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 703694438, guid: 353c6910fa926cd4a9e66bea474a8768, type: 3}
       propertyPath: tileManager
       value: 

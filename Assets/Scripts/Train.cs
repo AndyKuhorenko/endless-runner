@@ -1,20 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Train : MonoBehaviour
 {
-    private int trainSpeed = 6;
+    CinemachineDollyCart[] railCarriages;
 
     // Start is called before the first frame update
     void Start()
     {
-        trainSpeed = Random.Range(5, 10);
-    }
+        float trainSpeed = Random.Range(6, 10);
+        railCarriages = GetComponentsInChildren<CinemachineDollyCart>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        transform.position = transform.position + Vector3.left * trainSpeed * Time.deltaTime;
+        foreach (CinemachineDollyCart railCrriage in railCarriages)
+        {
+            railCrriage.m_Speed = trainSpeed;
+        }
     }
 }
