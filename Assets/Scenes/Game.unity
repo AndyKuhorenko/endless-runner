@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 0d004721315f25b48988eeeea1eeaa40, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -1883,7 +1883,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 4.5905e-41, y: 0, z: 0, w: 1e-45}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -2751,9 +2751,11 @@ MonoBehaviour:
   fastZombie: {fileID: 1719332700531755829, guid: f8452402f3d806940aba724c073ea4c8, type: 3}
   weapon: {fileID: 7210847844253944002, guid: d6c80324351841648ab06d87821b2fcf, type: 3}
   monorails:
+  - {fileID: 482403525244773176, guid: 1343d6840fdbb2a45ba6d7c310f5c34f, type: 3}
   - {fileID: 482403525244773176, guid: 590a31c821315624da5a0eb49878c0a6, type: 3}
   - {fileID: 482403525244773176, guid: 9b10adb7b34f92d4aa9068667c5dda2c, type: 3}
   - {fileID: 482403525244773176, guid: d9baca2c880aa674289018d9b289ce67, type: 3}
+  - {fileID: 482403525244773176, guid: d4fc4b05489614d45bd2589668c2f119, type: 3}
 --- !u!1001 &1290721756
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4655,6 +4657,22 @@ PrefabInstance:
       propertyPath: audioManager
       value: 
       objectReference: {fileID: 72201173}
+    - target: {fileID: 4318833657875724656, guid: 353c6910fa926cd4a9e66bea474a8768, type: 3}
+      propertyPath: field of view
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 4318833657875724656, guid: 353c6910fa926cd4a9e66bea474a8768, type: 3}
+      propertyPath: m_FocalLength
+      value: 18.268253
+      objectReference: {fileID: 0}
+    - target: {fileID: 4318833657875724656, guid: 353c6910fa926cd4a9e66bea474a8768, type: 3}
+      propertyPath: far clip plane
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4318833657875724656, guid: 353c6910fa926cd4a9e66bea474a8768, type: 3}
+      propertyPath: m_projectionMatrixMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4318833658136253029, guid: 353c6910fa926cd4a9e66bea474a8768, type: 3}
       propertyPath: m_RootOrder
       value: 1

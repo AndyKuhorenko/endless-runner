@@ -8,6 +8,7 @@ public class Tile : MonoBehaviour
     public FastZombie fastZombie;
     public Weapon weapon;
     public GameObject[] monorails;
+    [SerializeField] LaunchPad launchPad;
 
     public bool hasObstacles = false;
     public bool hasEnemies = false;
@@ -21,7 +22,11 @@ public class Tile : MonoBehaviour
     private const int corridorSpawnChance = 10;
 
     private bool hasMonorail = false;
-    private const int monorailSpawnChance = 100;
+    private const int monorailSpawnChance = 5;
+
+    private bool hasLaunchPad = false;
+    private bool launchPadAtLeft = false;
+    private const int launchPadSpawnChance = 5;
 
     private const float obstacleCellDepth = 3.5f;
     private List<float> takenPosZ = new List<float>(); 
@@ -59,8 +64,16 @@ public class Tile : MonoBehaviour
         else
         {
             hasMonorail = Random.Range(0, 100) < monorailSpawnChance;
+            hasLaunchPad = Random.Range(0, 100) < launchPadSpawnChance;
 
-            if (hasMonorail) CreateMonorail();
+            if (false)
+            {
+                CreateMonorail();
+            }
+            else if (true)
+            {
+                CreateLaunchPad();
+            }
         }
 
         CreateEnvironment();
@@ -81,9 +94,21 @@ public class Tile : MonoBehaviour
     {
         GameObject monorail = monorails[Random.Range(0, monorails.Length)];
 
-        Debug.Log(Random.Range(0, 2));
-
         Instantiate(monorail, new Vector3(0, 0, transform.position.z + tileDepth / 2), Quaternion.identity, transform);
+    }
+
+    private void CreateLaunchPad()
+    {
+        if (Random.Range(0, 100) > 50) launchPadAtLeft = true;
+
+        if (launchPadAtLeft)
+        {
+            Instantiate(launchPad, new Vector3(-8, 0, transform.position.z + tileDepth / 2), Quaternion.identity, transform);
+        }
+        else
+        {
+            Instantiate(launchPad, new Vector3(8, 0, transform.position.z + tileDepth / 2), Quaternion.identity, transform);
+        }
     }
 
     private void CreateEnvironment()
@@ -97,7 +122,7 @@ public class Tile : MonoBehaviour
                 bool isSpawned = Random.Range(0, 100) < envSpawnChance;
 
                 // 2nd row is monorail position
-                if ((hasMonorail && row != 2 && isSpawned) || (!hasMonorail && isSpawned))
+                if ((hasMonorail && row != 2 && isSpawned) || (!hasMonorail && isSpawned) || (hasLaunchPad && launchPadAtLeft && col > columns / 2 && true))
                 {
                     GameObject prefab = envPrefabs[Random.Range(0, envPrefabs.Length)];
 

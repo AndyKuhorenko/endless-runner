@@ -294,6 +294,7 @@ MonoBehaviour:
   fastZombie: {fileID: 0}
   weapon: {fileID: 0}
   monorails: []
+  launchPad: {fileID: 1786703839014524599, guid: 13ada4c780e887d42bb7ec1b32394abe, type: 3}
   hasObstacles: 0
   hasEnemies: 0
   obstacleSpawnChance: 0
@@ -465,7 +466,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dcfd535de268c469f7206af2fcd892, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -25.73
+      value: -30.74
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dcfd535de268c469f7206af2fcd892, type: 3}
       propertyPath: m_LocalPosition.y
@@ -551,7 +552,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dcfd535de268c469f7206af2fcd892, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 27.35
+      value: 31.56
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dcfd535de268c469f7206af2fcd892, type: 3}
       propertyPath: m_LocalPosition.y
